@@ -1,0 +1,38 @@
+# This workflow will install Python dependencies, run tests and lint with a single version of Python
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
+
+name: Backend
+
+on:
+  repository_dispatch:
+    types: [analysis_updated]
+  push:
+    branches: [ "development" ]
+
+jobs:
+  build:
+
+    runs-on: [self-hosted, testenv]
+    steps:
+    - name: Clone Backend
+      uses: actions/checkout@v3
+    - name: Clone EosdxAnalysis
+      uses: actions/checkout@v3
+      with:
+        repository: Eos-Dx/xrd-analysis
+        path: xrdpath/
+        token: ${{ secrets.MY_PAT }}
+        # ref: ${{ vars.ANALYSIS_VERSION }}
+    - name: Create venv
+    
+      run: | 
+        python3 -m venv venv
+        source venv/bin/activate
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        pip install gunicorn
+        pip install ./xrdpath
+        deactivate
+    - name: Create symlink
+      run: ln -s /home/misha/backend-runner/.env /home/misha/backend-runner/_work/dcbackend/dcbackend/.env
+    - name: Restart Backend
+      run: sudo /bin/systemctl restart backend.service
