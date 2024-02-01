@@ -622,10 +622,11 @@ class GetToken(Resource):
 
         # POST request to login and get a bearer token
         # Note: Yes, credentials are hardcoded, and this is OK!!!!!
-        bearer = session.post("https://superset.mlgarden.dev/api/v1/security/login", json= {'password': '12345',
-                    'provider': "db",
-                    'refresh': True,
-                    'username': "guest"})
+        bearer = session.post("https://superset.mlgarden.dev/api/v1/security/login", json= {'password': ,
+                    'provider':
+                    'refresh': 
+                    'username': "})
+                    # единственные хардкодед переменные которые я удалил
         
         # Extract the access_token from the response
         bearer = bearer.json()['access_token']
@@ -645,9 +646,11 @@ class GetToken(Resource):
               }
             ],
             "user": {
-              "first_name": "guest",
-              "last_name": "user",
-              "username": "guest"
+              "first_name": "",
+              "last_name": "",
+              "username": ""
+                                  # единственные хардкодед переменные которые я удалил
+
             },
             "rls":[]}, headers= {'Authorization':'Bearer '+ bearer,"X-CSRFToken":csrf})
         # Return the token to the frontend
